@@ -91,6 +91,45 @@ Node *dequeue(Queue *q) {
     return treeNode;
 }
 
+int height(Node *root) {
+
+    if (root == NULL) {
+        return -1;
+    }
+
+    int leftHeight = height(root->left);
+    int rightHeight = height(root->right);
+
+    return 1 + (leftHeight > rightHeight ? leftHeight : rightHeight);
+}
+
+int diameterHelper(Node *root, int *diameter) {
+
+    if (root == NULL) {
+        return -1;
+    }
+
+    int leftHeight = diameterHelper(root->left, diameter);
+    int rightHeight = diameterHelper(root->right, diameter);
+
+    int currentDiameter = leftHeight + rightHeight + 2;
+
+    if (currentDiameter > *diameter) {
+        *diameter = currentDiameter;
+    }
+
+    return 1 + (leftHeight > rightHeight ? leftHeight : rightHeight);
+}
+
+
+int diameter(Node *root) {
+
+    int diameterValue = 0;
+
+    diameterHelper(root, &diameterValue);
+
+    return diameterValue;
+}
 
 /* -------------------- Construct Tree -------------------- */
 
@@ -296,6 +335,9 @@ int main() {
     levelOrder(root);
 
     printf("\n");
+
+    printf("\nHeight: %d", height(root));
+    printf("\nDiameter: %d", diameter(root));
 
     /* Free allocated memory */
     freeTree(root);
